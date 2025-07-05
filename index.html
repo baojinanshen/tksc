@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中小学题库生成器</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#10B981',
+            accent: '#F59E0B',
+            dark: '#1F2937',
+            light: '#F3F4F6'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .transition-custom {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-dark min-h-screen flex flex-col">
+  <!-- 导航栏 -->
+  <nav class="bg-white shadow-md sticky top-0 z-50 transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-graduation-cap text-primary text-2xl"></i>
+        <span class="text-xl font-bold text-primary">中小学题库生成器</span>
+      </div>
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#" class="font-medium text-primary hover:text-primary/80 transition-colors">首页</a>
+        <a href="#features" class="font-medium text-gray-700 hover:text-primary transition-colors">功能介绍</a>
+        <a href="#generator" class="font-medium text-gray-700 hover:text-primary transition-colors">题库生成</a>
+        <a href="#about" class="font-medium text-gray-700 hover:text-primary transition-colors">关于我们</a>
+      </div>
+      <button class="md:hidden text-gray-700 focus:outline-none" id="mobile-menu-button">
+        <i class="fa fa-bars text-xl"></i>
+      </button>
+    </div>
+    <!-- 移动端菜单 -->
+    <div class="md:hidden hidden bg-white shadow-lg absolute w-full" id="mobile-menu">
+      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+        <a href="#" class="font-medium text-primary py-2 border-b border-gray-100">首页</a>
+        <a href="#features" class="font-medium text-gray-700 py-2 border-b border-gray-100 hover:text-primary transition-colors">功能介绍</a>
+        <a href="#generator" class="font-medium text-gray-700 py-2 border-b border-gray-100 hover:text-primary transition-colors">题库生成</a>
+        <a href="#about" class="font-medium text-gray-700 py-2 hover:text-primary transition-colors">关于我们</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 英雄区 -->
+  <header class="relative bg-gradient-to-br from-primary/90 to-primary overflow-hidden">
+    <div class="absolute inset-0 bg-[url('https://picsum.photos/id/24/1920/1080')] bg-cover bg-center opacity-10"></div>
+    <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-white mb-6 leading-tight text-shadow">
+          轻松生成中小学各科目题库
+        </h1>
+        <p class="text-[clamp(1rem,2vw,1.25rem)] text-white/90 mb-10 max-w-2xl mx-auto">
+          自定义选择年级、科目和题目数量，一键生成高质量题库，附带详细答案和解析
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="#generator" class="bg-white text-primary font-medium px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            开始生成题库
+          </a>
+          <a href="#features" class="bg-transparent border-2 border-white text-white font-medium px-8 py-3 rounded-lg hover:bg-white/10 transition-all duration-300">
+            了解更多功能
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-0">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-[60px] md:h-[80px]">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C0,0,31,30,31,30z" fill="#F9FAFB" />
+      </svg>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <!-- 功能介绍 -->
+    <section id="features" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">强大功能，满足教学需求</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">我们的题库生成器提供了丰富的功能，帮助教师和学生高效创建和使用练习题</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- 功能卡片1 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-all duration-300">
+            <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+              <i class="fa fa-book text-primary text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">全学科覆盖</h3>
+            <p class="text-gray-600">从幼儿园到小学六年级的所有主要科目，包括语文、数学、英语、科学等，满足多样化学习需求。</p>
+          </div>
+          
+          <!-- 功能卡片2 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-all duration-300">
+            <div class="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mb-6">
+              <i class="fa fa-sliders text-secondary text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">灵活定制</h3>
+            <p class="text-gray-600">自由选择年级、科目和题目数量，精准匹配教学进度和学生水平，打造个性化学习材料。</p>
+          </div>
+          
+          <!-- 功能卡片3 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-all duration-300">
+            <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-6">
+              <i class="fa fa-file-text-o text-accent text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">详细解析</h3>
+            <p class="text-gray-600">所有生成的题目都附带详细答案和解析，帮助学生理解解题思路，提高学习效果。</p>
+          </div>
+          
+          <!-- 功能卡片4 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-all duration-300">
+            <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+              <i class="fa fa-download text-purple-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">便捷导出</h3>
+            <p class="text-gray-600">支持多种导出方式，可直接打印或下载为PDF、Word格式，随时随地使用学习材料。</p>
+          </div>
+          
+          <!-- 功能卡片5 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-all duration-300">
+            <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
+              <i class="fa fa-clock-o text-indigo-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">节省时间</h3>
+            <p class="text-gray-600">自动生成题目，无需手动编写，大幅减少教师备课时间，让您有更多精力关注教学质量。</p>
+          </div>
+          
+          <!-- 功能卡片6 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-all duration-300">
+            <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mb-6">
+              <i class="fa fa-refresh text-red-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">不断更新</h3>
+            <p class="text-gray-600">题库持续更新，紧跟教学大纲变化，确保题目内容与时俱进，符合最新教育要求。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 题库生成器 -->
+    <section id="generator" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">开始生成你的题库</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">只需几步，即可创建符合需求的高质量练习题</p>
+        </div>
+        
+        <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+          <!-- 步骤导航 -->
+          <div class="bg-gray-50 border-b border-gray-200">
+            <div class="flex">
+              <button class="step-btn active flex-1 py-4 px-4 text-center font-medium transition-colors" data-step="1">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white mr-2">1</span>
+                <span>选择年级</span>
+              </button>
+              <button class="step-btn flex-1 py-4 px-4 text-center font-medium text-gray-500 transition-colors" data-step="2">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300 text-gray-700 mr-2">2</span>
+                <span>选择科目</span>
+              </button>
+              <button class="step-btn flex-1 py-4 px-4 text-center font-medium text-gray-500 transition-colors" data-step="3">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300 text-gray-700 mr-2">3</span>
+                <span>设置题目</span>
+              </button>
+              <button class="step-btn flex-1 py-4 px-4 text-center font-medium text-gray-500 transition-colors" data-step="4">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300 text-gray-700 mr-2">4</span>
+                <span>生成题库</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- 步骤内容 -->
+          <div class="p-8">
+            <!-- 步骤1：选择年级 -->
+            <div class="step-content" id="step-1">
+              <h3 class="text-xl font-bold mb-6">选择年级</h3>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <button class="grade-btn bg-gray-100 hover:bg-gray-200 p-4 rounded-lg text-center transition-colors" data-grade="幼儿园">
+                  <div class="text-2xl font-bold mb-1">幼儿园</div>
+                  <div class="text-sm text-gray-600">学前教育</div>
+                </button>
+                <button class="grade-btn bg-gray-100 hover:bg-gray-200 p-4 rounded-lg text-center transition-colors" data-grade="一年级">
+                  <div class="text-2xl font-bold mb-1">一年级</div>
+                  <div class="text-sm text-gray-600">小学低年级</div>
+                </button>
+                <button class="grade-btn bg-gray-100 hover:bg-gray-200 p-4 rounded-lg text-center transition-colors" data-grade="二年级">
+                  <div class="text-2xl font-bold mb-1">二年级</div>
+                  <div class="text-sm text-gray-600">小学低年级</div>
+                </button>
+                <button class="grade-btn bg-gray-100 hover:bg-gray-200 p-4 rounded-lg text-center transition-colors" data-grade="三年级">
+                  <div class="text-2xl font-bold mb-1">三年级</div>
+                  <div class="text-sm text-gray-600">小学中年级</div>
+                </button>
+                <button class="grade-btn bg-gray-100 hover:bg-gray-200 p-4 rounded-lg text-center transition-colors" data-grade="四年级">
+                  <div class="text-2xl font-bold mb-1">四年级</div>
+                  <div class="text-sm text-gray-600">小学中年级</div>
+                </button>
+                <button class="grade-btn bg-gray-100 hover:bg-gray-200 p-4 rounded-lg text-center transition-colors" data-grade="五年级">
+                  <div class="text-2xl font-bold mb-1">五年级</div>
+                  <div class="text-sm text-gray-600">小学高年级</div>
+                </button>
+                <button class="grade-btn bg-gray-100 hover:bg-gray-200 p-4 rounded-lg text-center transition-colors" data-grade="六年级">
+                  <div class="text-2xl font-bold mb-1">六年级</div>
+                  <div class="text-sm text-gray-600">小学高年级</div>
+                </button>
+              </div>
+              <div class="mt-8 text-right">
+                <button id="next-to-step-2" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                  下一步
+                  <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- 步骤2：选择科目 -->
+            <div class="step-content hidden" id="step-2">
+              <h3 class="text-xl font-bold mb-6">选择科目</h3>
+              <div id="subjects-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- 科目选项将通过JavaScript动态生成 -->
+              </div>
+              <div class="mt-8 flex justify-between">
+                <button id="back-to-step-1" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                  <i class="fa fa-arrow-left mr-2"></i>
+                  返回
+                </button>
+                <button id="next-to-step-3" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                  下一步
+                  <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- 步骤3：设置题目 -->
+            <div class="step-content hidden" id="step-3">
+              <h3 class="text-xl font-bold mb-6">设置题目</h3>
+              
+              <div class="mb-8">
+                <h4 class="font-bold mb-4">已选条件：</h4>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="flex flex-wrap gap-3">
+                    <span class="inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                      <span id="selected-grade-display">年级</span>
+                      <button class="ml-1 text-primary/70 hover:text-primary"><i class="fa fa-times-circle"></i></button>
+                    </span>
+                    <span id="selected-subjects-display" class="inline-flex flex-wrap gap-2">
+                      <!-- 已选科目将通过JavaScript动态生成 -->
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="space-y-6">
+                <div>
+                  <label class="block text-gray-700 font-medium mb-2" for="question-count">题目数量</label>
+                  <input type="number" id="question-count" min="1" max="100" value="10" 
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
+                  <p class="text-gray-500 text-sm mt-1">请输入1-100之间的数字</p>
+                </div>
+                
+                <div>
+                  <label class="block text-gray-700 font-medium mb-2">题目类型（可多选）</label>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                      <input type="checkbox" name="question-type" value="选择题" class="question-type-checkbox" checked>
+                      <span>选择题</span>
+                    </label>
+                    <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                      <input type="checkbox" name="question-type" value="填空题" class="question-type-checkbox" checked>
+                      <span>填空题</span>
+                    </label>
+                    <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                      <input type="checkbox" name="question-type" value="判断题" class="question-type-checkbox" checked>
+                      <span>判断题</span>
+                    </label>
+                    <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                      <input type="checkbox" name="question-type" value="解答题" class="question-type-checkbox" checked>
+                      <span>解答题</span>
+                    </label>
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-gray-700 font-medium mb-2">难度分布</label>
+                  <div class="space-y-4">
+                    <div class="flex items-center">
+                      <label class="w-24 text-gray-600">简单</label>
+                      <input type="range" min="0" max="100" value="30" class="difficulty-slider w-full mx-4" data-difficulty="easy">
+                      <span class="w-12 text-right text-gray-600" id="easy-value">30%</span>
+                    </div>
+                    <div class="flex items-center">
+                      <label class="w-24 text-gray-600">中等</label>
+                      <input type="range" min="0" max="100" value="50" class="difficulty-slider w-full mx-4" data-difficulty="medium">
+                      <span class="w-12 text-right text-gray-600" id="medium-value">50%</span>
+                    </div>
+                    <div class="flex items-center">
+                      <label class="w-24 text-gray-600">困难</label>
+                      <input type="range" min="0" max="100" value="20" class="difficulty-slider w-full mx-4" data-difficulty="hard">
+                      <span class="w-12 text-right text-gray-600" id="hard-value">20%</span>
+                    </div>
+                  </div>
+                  <p class="text-gray-500 text-sm mt-1">难度百分比总和应为100%</p>
+                </div>
+              </div>
+              
+              <div class="mt-8 flex justify-between">
+                <button id="back-to-step-2" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                  <i class="fa fa-arrow-left mr-2"></i>
+                  返回
+                </button>
+                <button id="next-to-step-4" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">
+                  生成题库
+                  <i class="fa fa-magic ml-2"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- 步骤4：生成结果 -->
+            <div class="step-content hidden" id="step-4">
+              <h3 class="text-xl font-bold mb-6">题库生成成功</h3>
+              
+              <div class="bg-gray-50 p-6 rounded-lg mb-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                  <div>
+                    <h4 class="font-bold text-lg">
+                      <span id="result-grade">年级</span>
+                      <span id="result-subject">科目</span>
+                      练习题
+                    </h4>
+                    <p class="text-gray-600">共 <span id="result-count">0</span> 道题目</p>
+                  </div>
+                  <div class="flex flex-wrap gap-3">
+                    <button id="download-pdf" class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center">
+                      <i class="fa fa-file-pdf-o mr-2"></i> 下载PDF
+                    </button>
+                    <button id="download-word" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center">
+                      <i class="fa fa-file-word-o mr-2"></i> 下载Word
+                    </button>
+                    <button id="print-questions" class="bg-gray-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition-colors flex items-center">
+                      <i class="fa fa-print mr-2"></i> 打印
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- 题目预览 -->
+                <div class="border-t border-gray-200 pt-6">
+                  <h5 class="font-bold mb-4">题目预览</h5>
+                  <div id="questions-preview" class="space-y-6">
+                    <!-- 题目将通过JavaScript动态生成 -->
+                  </div>
+                  
+                  <div class="mt-8 text-center">
+                    <button id="show-answers" class="bg-secondary text-white px-6 py-3 rounded-lg font-medium hover:bg-secondary/90 transition-colors">
+                      查看答案和解析
+                      <i class="fa fa-eye ml-2"></i>
+                    </button>
+                  </div>
+                  
+                  <div id="answers-section" class="mt-8 hidden">
+                    <div class="border-t border-gray-200 pt-6">
+                      <h5 class="font-bold mb-4">答案与解析</h5>
+                      <div id="answers-preview" class="space-y-6">
+                        <!-- 答案将通过JavaScript动态生成 -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flex justify-center">
+                <button id="generate-another" class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">
+                  <i class="fa fa-refresh mr-2"></i>
+                  生成新题库
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section id="about" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">关于我们</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">我们致力于为教育工作者和学生提供高质量的学习资源</p>
+        </div>
+        
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="md:flex">
+              <div class="md:w-1/3 bg-primary p-8 flex items-center justify-center">
+                <div class="text-center text-white">
+                  <i class="fa fa-lightbulb-o text-5xl mb-4"></i>
+                  <h3 class="text-xl font-bold mb-2">我们的使命</h3>
+                  <p class="opacity-90">提供便捷、高效的教育工具，帮助学生和教师实现更好的学习效果</p>
+                </div>
+              </div>
+              <div class="md:w-2/3 p-8">
+                <p class="text-gray-700 mb-4">
+                  中小学题库生成器是一款专为教育工作者和学生设计的工具，旨在简化题库创建过程，提高学习效率。我们的题库覆盖从幼儿园到小学六年级的所有主要科目，内容丰富且不断更新。
+                </p>
+                <p class="text-gray-700 mb-4">
+                  我们相信，优质的教育资源应该是便捷可得的。通过我们的平台，教师可以节省大量时间用于备课，学生可以获得更多针对性的练习材料，从而提升学习效果。
+                </p>
+                <p class="text-gray-700">
+                  如果您在使用过程中有任何问题或建议，欢迎随时联系我们，我们将竭诚为您服务。
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-12 text-center">
+            <h3 class="text-xl font-bold mb-6">常见问题</h3>
+            <div class="space-y-4">
+              <div class="bg-white p-6 rounded-xl shadow-md">
+                <h4 class="font-bold mb-2 flex justify-between items-center">
+                  <span>题库中的题目来源是什么？</span>
+                  <i class="fa fa-chevron-down text-gray-400 question-toggle"></i>
+                </h4>
+                <div class="question-answer hidden">
+                  <p class="text-gray-600">
+                    我们的题库由教育专家精心编写，内容符合国家教育大纲要求，覆盖各年级各学科的重点知识点。所有题目都经过严格审核，确保质量和准确性。
+                  </p>
+                </div>
+              </div>
+              
+              <div class="bg-white p-6 rounded-xl shadow-md">
+                <h4 class="font-bold mb-2 flex justify-between items-center">
+                  <span>生成的题目可以修改或编辑吗？</span>
+                  <i class="fa fa-chevron-down text-gray-400 question-toggle"></i>
+                </h4>
+                <div class="question-answer hidden">
+                  <p class="text-gray-600">
+                    目前我们提供了基本的题目定制选项，如难度分布、题目类型等。未来我们计划推出更高级的编辑功能，允许用户直接修改生成的题目内容。
+                  </p>
+                </div>
+              </div>
+              
+              <div class="bg-white p-6 rounded-xl shadow-md">
+                <h4 class="font-bold mb-2 flex justify-between items-center">
+                  <span>是否支持批量生成多套试卷？</span>
+                  <i class="fa fa-chevron-down text-gray-400 question-toggle"></i>
+                </h4>
+                <div class="question-answer hidden">
+                  <p class="text-gray-600">
+                    是的，我们支持批量生成功能。您可以设置不同的参数，一次性生成多套不同的试卷，满足不同场景的需求。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <i class="fa fa-graduation-cap text-primary text-2xl"></i>
+            <span class="text-xl font-bold">中小学题库生成器</span>
+          </div>
+          <p class="text-gray-400 mb-4">
+            为教育工作者和学生提供高质量的题库生成服务，助力高效学习。
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fa fa-weixin text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fa fa-weibo text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fa fa-envelope-o text-xl"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-4">快速链接</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">首页</a></li>
+            <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">功能介绍</a></li>
+            <li><a href="#generator" class="text-gray-400 hover:text-white transition-colors">题库生成</a></li>
+            <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">关于我们</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-4">年级覆盖</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">幼儿园</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">小学一年级</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">小学二年级</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">小学三年级</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">小学四年级</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">小学五年级</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">小学六年级</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-4">联系我们</h4>
+          <ul class="space-y-2">
+            <li class="flex items-start space-x-3">
+              <i class="fa fa-map-marker text-primary mt-1"></i>
+              <span class="text-gray-400">北京市海淀区中关村大街1号</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="fa fa-phone text-primary"></i>
+              <span class="text-gray-400">400-123-4567</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="fa fa-envelope-o text-primary"></i>
+              <span class="text-gray-400">contact@example.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm">© 2025 中小学题库生成器 版权所有</p>
+        <div class="flex space-x-6 mt-4 md:mt-0">
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm">隐私政策</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm">使用条款</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm">帮助中心</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 脚本 -->
+  <script>
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('py-2');
+        navbar.classList.add('shadow-lg');
+      } else {
+        navbar.classList.remove('py-2');
+        navbar.classList.remove('shadow-lg');
+      }
+    });
+    
+    // 移动端菜单
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          window.scrollTo({
+            top: target.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          // 关闭移动菜单
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+          }
+        }
+      });
+    });
+    
+    // 题库生成器 - 年级和科目数据
+    const gradeSubjects = {
+      '幼儿园': ['语言', '数学', '科学', '艺术', '健康'],
+      '一年级': ['语文', '数学', '英语', '道德与法治', '体育'],
+      '二年级': ['语文', '数学', '英语', '道德与法治', '体育'],
+      '三年级': ['语文', '数学', '英语', '科学', '道德与法治', '体育'],
+      '四年级': ['语文', '数学', '英语', '科学', '道德与法治', '体育'],
+      '五年级': ['语文', '数学', '英语', '科学', '道德与法治', '体育', '信息技术'],
+      '六年级': ['语文', '数学', '英语', '科学', '道德与法治', '体育', '信息技术']
+    };
+    
+    // 题库生成器 - 步骤导航
+    const stepButtons = document.querySelectorAll('.step-btn');
+    const stepContents = document.querySelectorAll('.step-content');
+    const nextToStep2Btn = document.getElementById('next-to-step-2');
+    const backToStep1Btn = document.getElementById('back-to-step-1');
+    const nextToStep3Btn = document.getElementById('next-to-step-3');
+    const backToStep2Btn = document.getElementById('back-to-step-2');
+    const nextToStep4Btn = document.getElementById('next-to-step-4');
+    const generateAnotherBtn = document.getElementById('generate-another');
+    
+    let selectedGrade = null;
+    let selectedSubjects = [];
+    
+    // 年级选择
+    const gradeButtons = document.querySelectorAll('.grade-btn');
+    gradeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // 移除其他选中状态
+        gradeButtons.forEach(b => b.classList.remove('bg-primary', 'text-white'));
+        gradeButtons.forEach(b => b.classList.add('bg-gray-100', 'text-dark'));
+        
+        // 添加选中状态
+        btn.classList.remove('bg-gray-100', 'text-dark');
+        btn.classList.add('bg-primary', 'text-white');
+        
+        // 保存选中的年级
+        selectedGrade = btn.getAttribute('data-grade');
+        document.getElementById('selected-grade-display').textContent = selectedGrade;
+        document.getElementById('result-grade').textContent = selectedGrade;
+        
+        // 启用下一步按钮
+        nextToStep2Btn.disabled = false;
+        
+        // 生成对应年级的科目
+        generateSubjects(selectedGrade);
+      });
+    });
+    
+    // 生成对应年级的科目
+    function generateSubjects(grade) {
+      const subjectsContainer = document.getElementById('subjects-container');
+      subjectsContainer.innerHTML = '';
+      
+      if (grade && gradeSubjects[grade]) {
+        gradeSubjects[grade].forEach(subject => {
+          const subjectBtn = document.createElement('button');
+          subjectBtn.className = 'subject-btn bg-gray-100 hover:bg-gray-200 p-4 rounded-lg text-center transition-colors';
+          subjectBtn.setAttribute('data-subject', subject);
+          subjectBtn.innerHTML = `
+            <div class="text-xl font-bold mb-1">${subject}</div>
+          `;
+          
+          subjectBtn.addEventListener('click', () => {
+            // 切换选中状态
+            if (subjectBtn.classList.contains('bg-primary')) {
+              subjectBtn.classList.remove('bg-primary', 'text-white');
+              subjectBtn.classList.add('bg-gray-100', 'text-dark');
+              // 从已选科目中移除
+              selectedSubjects = selectedSubjects.filter(s => s !== subject);
+            } else {
+              subjectBtn.classList.remove('bg-gray-100', 'text-dark');
+              subjectBtn.classList.add('bg-primary', 'text-white');
+              // 添加到已选科目
+              selectedSubjects.push(subject);
+            }
+            
+            // 更新已选科目显示
+            updateSelectedSubjectsDisplay();
+            
+            // 检查是否有选中的科目
+            nextToStep3Btn.disabled = selectedSubjects.length === 0;
+          });
+          
+          subjectsContainer.appendChild(subjectBtn);
+        });
+      }
+    }
+    
+    // 更新已选科目显示
+    function updateSelectedSubjectsDisplay() {
+      const displayContainer = document.getElementById('selected-subjects-display');
+      displayContainer.innerHTML = '';
+      
+      selectedSubjects.forEach(subject => {
+        const subjectTag = document.createElement('span');
+        subjectTag.className = 'inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm';
+        subjectTag.innerHTML = `
+          ${subject}
+          <button class="ml-1 text-primary/70 hover:text-primary" data-remove-subject="${subject}">
+            <i class="fa fa-times-circle"></i>
+          </button>
+        `;
+        
+        // 添加移除事件
+        subjectTag.querySelector('button').addEventListener('click', (e) => {
+          const subjectToRemove = e.currentTarget.getAttribute('data-remove-subject');
+          // 从已选科目中移除
+          selectedSubjects = selectedSubjects.filter(s => s !== subjectToRemove);
+          
+          // 更新显示
+          updateSelectedSubjectsDisplay();
+          
+          // 更新科目按钮状态
+          document.querySelectorAll('.subject-btn').forEach(btn => {
+            if (btn.getAttribute('data-subject') === subjectToRemove) {
+              btn.classList.remove('bg-primary', 'text-white');
+              btn.classList.add('bg-gray-100', 'text-dark');
+            }
+          });
+          
+          // 检查是否有选中的科目
+          nextToStep3Btn.disabled = selectedSubjects.length === 0;
+        });
+        
+        displayContainer.appendChild(subjectTag);
+      });
+      
+      // 更新结果页的科目显示
+      document.getElementById('result-subject').textContent = selectedSubjects.join('、');
+    }
+    
+    // 难度滑块联动
+    const difficultySliders = document.querySelectorAll('.difficulty-slider');
+    const difficultyValues = {
+      easy: 30,
+      medium: 50,
+      hard: 20
+    };
+    
+    difficultySliders.forEach(slider => {
+      slider.addEventListener('input', () => {
+        const difficulty = slider.getAttribute('data-difficulty');
+        const value = parseInt(slider.value);
+        
+        // 更新显示
+        document.getElementById(`${difficulty}-value`).textContent = `${value}%`;
+        difficultyValues[difficulty] = value;
+        
+        // 计算剩余值
+        let total = 0;
+        Object.values(difficultyValues).forEach(v => {
+          total += v;
+        });
+        
+        const remaining = 100 - total;
+        
+        // 重新分配其他滑块
+        if (remaining !== 0) {
+          const otherDifficulties = Object.keys(difficultyValues).filter(d => d !== difficulty);
+          const otherSliders = document.querySelectorAll(`.difficulty-slider:not([data-difficulty="${difficulty}"])`);
+          
+          // 计算每个其他滑块需要调整的值
+          const adjustment = remaining / otherDifficulties.length;
+          
+          otherDifficulties.forEach(d => {
+            const otherValue = difficultyValues[d] + adjustment;
+            // 确保值在0-100之间
+            if (otherValue >= 0 && otherValue <= 100) {
+              difficultyValues[d] = otherValue;
+              document.getElementById(`${d}-value`).textContent = `${Math.round(otherValue)}%`;
+              document.querySelector(`.difficulty-slider[data-difficulty="${d}"]`).value = Math.round(otherValue);
+            }
+          });
+        }
+      });
+    });
+    
+    // 步骤导航按钮事件
+    nextToStep2Btn.addEventListener('click', () => {
+      goToStep(2);
+    });
+    
+    backToStep1Btn.addEventListener('click', () => {
+      goToStep(1);
+    });
+    
+    nextToStep3Btn.addEventListener('click', () => {
+      goToStep(3);
+    });
+    
+    backToStep2Btn.addEventListener('click', () => {
+      goToStep(2);
+    });
+    
+    nextToStep4Btn.addEventListener('click', () => {
+      generateQuestions();
+      goToStep(4);
+    });
+    
+    generateAnotherBtn.addEventListener('click', () => {
+      // 重置部分选项
+      document.getElementById('question-count').value = 10;
+      
+      // 返回第一步
+      goToStep(1);
+    });
+    
+    // 切换步骤
+    function goToStep(step) {
+      // 更新步骤按钮状态
+      stepButtons.forEach(btn => {
+        const btnStep = parseInt(btn.getAttribute('data-step'));
+        if (btnStep === step) {
+          btn.classList.add('active', 'text-primary');
+          btn.classList.remove('text-gray-500');
+          btn.querySelector('span:first-child').classList.add('bg-primary');
+          btn.querySelector('span:first-child').classList.remove('bg-gray-300');
+        } else if (btnStep < step) {
+          btn.classList.remove('active', 'text-primary');
+          btn.classList.add('text-gray-500');
+          btn.querySelector('span:first-child').classList.add('bg-primary');
+          btn.querySelector('span:first-child').classList.remove('bg-gray-300');
+        } else {
+          btn.classList.remove('active', 'text-primary');
+          btn.classList.add('text-gray-500');
+          btn.querySelector('span:first-child').classList.remove('bg-primary');
+          btn.querySelector('span:first-child').classList.add('bg-gray-300');
+        }
+      });
+      
+      // 更新步骤内容显示
+      stepContents.forEach(content => {
+        const contentId = content.id;
+        const contentStep = parseInt(contentId.split('-')[1]);
+        if (contentStep === step) {
+          content.classList.remove('hidden');
+        } else {
+          content.classList.add('hidden');
+        }
+      });
+      
+      // 平滑滚动到顶部
+      window.scrollTo({
+        top: document.getElementById('generator').offsetTop - 100,
+        behavior: 'smooth'
+      });
+    }
+    
+    // 生成题目
+    function generateQuestions() {
+      const questionCount = parseInt(document.getElementById('question-count').value);
+      document.getElementById('result-count').textContent = questionCount;
+      
+      const questionsPreview = document.getElementById('questions-preview');
+      const answersPreview = document.getElementById('answers-preview');
+      questionsPreview.innerHTML = '';
+      answersPreview.innerHTML = '';
+      
+      // 确定题目类型
+      const selectedTypes = Array.from(document.querySelectorAll('.question-type-checkbox:checked'))
+        .map(checkbox => checkbox.value);
+      
+      // 示例题库数据
+      const sampleQuestions = {
+        '语文': {
+          '选择题': [
+            {
+              question: '下列词语中，没有错别字的一项是（ ）',
+              options: ['A. 忘纪', 'B. 篮天', 'C. 已经', 'D. 睛天'],
+              answer: 'C',
+              explanation: 'A选项"忘纪"应为"忘记"，B选项"篮天"应为"蓝天"，D选项"睛天"应为"晴天"，只有C选项没有错别字。'
+            },
+            {
+              question: '下列哪个字是左右结构？（ ）',
+              options: ['A. 星', 'B. 田', 'C. 日', 'D. 人'],
+              answer: 'A',
+              explanation: 'A选项"星"是上下结构，B选项"田"和C选项"日"是独体字，D选项"人"是独体字，只有A选项是左右结构。'
+            }
+          ],
+          '填空题': [
+            {
+              question: '春天来了，小草从地下______出来。',
+              answer: '探',
+              explanation: '根据课文《找春天》，这里应填"探"，生动地表现了小草破土而出的样子。'
+            },
+            {
+              question: '五星红旗迎风______，胜利歌声多么响亮。',
+              answer: '飘扬',
+              explanation: '根据歌曲《歌唱祖国》，这里应填"飘扬"，描绘了五星红旗在风中飘动的样子。'
+            }
+          ],
+          '判断题': [
+            {
+              question: '"远看山有色，近听水无声。"出自王维的《画》。（ ）',
+              answer: '对',
+              explanation: '这句诗出自唐代诗人王维的《画》，全诗为"远看山有色，近听水无声。春去花还在，人来鸟不惊。"'
+            },
+            {
+              question: '"我"的第五笔是斜钩。（ ）',
+              answer: '错',
+              explanation: '"我"的笔顺是：撇、横、竖钩、提、斜钩、撇、点，第五笔是"斜钩"后面的"撇"。'
+            }
+          ],
+          '解答题': [
+            {
+              question: '请用"一边……一边……"造句。',
+              answer: '妈妈一边做饭一边听音乐。',
+              explanation: '"一边……一边……"表示两个动作同时进行，造句时要注意主语和动作的合理性。'
+            },
+            {
+              question: '请写出四个描写春天的词语。',
+              answer: '春暖花开、春风拂面、百花齐放、草长莺飞',
+              explanation: '描写春天的词语通常与温暖、生机、花朵等相关，以上四个词语都符合春天的特点。'
+            }
+          ]
+        },
+        '数学': {
+          '选择题': [
+            {
+              question: '5 + 7 = （ ）',
+              options: ['A. 10', 'B. 11', 'C. 12', 'D. 13'],
+              answer: 'C',
+              explanation: '5 + 7 = 12，所以正确答案是C。'
+            },
+            {
+              question: '一个正方形有几条边？（ ）',
+              options: ['A. 3', 'B. 4', 'C. 5', 'D. 6'],
+              answer: 'B',
+              explanation: '正方形有四条边，且四条边长度相等，所以正确答案是B。'
+            }
+          ],
+          '填空题': [
+            {
+              question: '10 - 3 = ______',
+              answer: '7',
+              explanation: '10减去3等于7，所以横线处应填7。'
+            },
+            {
+              question: '3 × 4 = ______',
+              answer: '12',
+              explanation: '3乘以4等于12，所以横线处应填12。'
+            }
+          ],
+          '判断题': [
+            {
+              question: '2 + 2 = 5。（ ）',
+              answer: '错',
+              explanation: '2 + 2 = 4，不等于5，所以答案是错。'
+            },
+            {
+              question: '长方形的对边相等。（ ）',
+              answer: '对',
+              explanation: '长方形的定义是四个角都是直角的四边形，它的对边长度相等，所以答案是对。'
+            }
+          ],
+          '解答题': [
+            {
+              question: '小明有5个苹果，小红又给了他3个，小明现在有多少个苹果？',
+              answer: '8个',
+              explanation: '小明原来有5个苹果，小红又给了他3个，所以现在有5 + 3 = 8个苹果。'
+            },
+            {
+              question: '小华买了3支铅笔，每支2元，一共花了多少钱？',
+              answer: '6元',
+              explanation: '每支铅笔2元，买了3支，所以一共花了3 × 2 = 6元。'
+            }
+          ]
+        },
+        '英语': {
+          '选择题': [
+            {
+              question: 'What is the plural form of "cat"?（ ）',
+              options: ['A. cat', 'B. cats', 'C. cates', 'D. caties'],
+              answer: 'B',
+              explanation: '一般情况下，可数名词的复数形式是在词尾加"s"，所以"cat"的复数是"cats"，正确答案是B。'
+            },
+            {
+              question: 'Which is a fruit?（ ）',
+              options: ['A. apple', 'B. car', 'C. book', 'D. pen'],
+              answer: 'A',
+              explanation: 'A选项"apple"是水果，B选项"car"是交通工具，C选项"book"和D选项"pen"是学习用品，所以正确答案是A。'
+            }
+          ],
+          '填空题': [
+            {
+              question: 'I ______ (am/is/are) a student.',
+              answer: 'am',
+              explanation: '主语是"I"时，be动词用"am"，所以横线处应填"am"。'
+            },
+            {
+              question: 'This is a ______ (dog/dogs).',
+              answer: 'dog',
+              explanation: '根据句中的"a"可知，后面应接单数名词，所以横线处应填"dog"。'
+            }
+          ],
+          '判断题': [
+            {
+              question: '"Goodbye" means "hello".（ ）',
+              answer: '错',
+              explanation: '"Goodbye"是再见的意思，"hello"是你好的意思，两者意思不同，所以答案是错。'
+            },
+            {
+              question: '"She" is a pronoun.（ ）',
+              answer: '对',
+              explanation: '"She"是人称代词，意思是"她"，所以答案是对。'
+            }
+          ],
+          '解答题': [
+            {
+              question: 'Translate "我喜欢英语" into English.',
+              answer: 'I like English.',
+              explanation: '"我"是"I"，"喜欢"是"like"，"英语"是"English"，所以翻译为"I like English."。'
+            },
+            {
+              question: 'What color is the sky?',
+              answer: 'Blue.',
+              explanation: '天空通常是蓝色的，所以答案是"Blue."。'
+            }
+          ]
+        }
+      };
+      
+      // 生成题目预览
+      for (let i = 1; i <= questionCount; i++) {
+        // 随机选择科目
+        const randomSubject = selectedSubjects[Math.floor(Math.random() * selectedSubjects.length)];
+        
+        // 如果该科目没有题目数据，跳过
+        if (!sampleQuestions[randomSubject]) continue;
+        
+        // 随机选择题目类型
+        const randomType = selectedTypes[Math.floor(Math.random() * selectedTypes.length)];
+        
+        // 如果该类型没有题目数据，跳过
+        if (!sampleQuestions[randomSubject][randomType]) continue;
+        
+        // 随机选择一道题目
+        const questions = sampleQuestions[randomSubject][randomType];
+        const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+        
+        // 创建题目元素
+        const questionEl = document.createElement('div');
+        questionEl.className = 'bg-white p-6 rounded-lg shadow-sm border border-gray-100';
+        
+        // 设置题目编号和内容
+        let questionHTML = `
+          <div class="font-bold mb-3">
+            第${i}题（${randomSubject} - ${randomType}）
+          </div>
+          <div class="mb-4">${randomQuestion.question}</div>
+        `;
+        
+        // 根据题目类型添加不同的内容
+        if (randomType === '选择题') {
+          questionHTML += `
+            <div class="space-y-2 ml-4">
+              ${randomQuestion.options.map(option => `
+                <div class="flex items-center">
+                  <span class="w-6 inline-block">${option.charAt(0)}</span>
+                  <span>${option.substring(2)}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (randomType === '填空题') {
+          questionHTML += `
+            <div class="h-8 w-32 border-b border-gray-400 inline-block"></div>
+          `;
+        } else if (randomType === '判断题') {
+          questionHTML += `
+            <div class="flex space-x-6 ml-4">
+              <label class="flex items-center">
+                <input type="radio" name="judge-${i}" value="对" class="mr-2">
+                <span>对</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="judge-${i}" value="错" class="mr-2">
+                <span>错</span>
+              </label>
+            </div>
+          `;
+        } else if (randomType === '解答题') {
+          questionHTML += `
+            <div class="h-32 w-full border border-gray-200 rounded p-2 mt-2"></div>
+          `;
+        }
+        
+        questionEl.innerHTML = questionHTML;
+        questionsPreview.appendChild(questionEl);
+        
+        // 创建答案元素
+        const answerEl = document.createElement('div');
+        answerEl.className = 'bg-white p-6 rounded-lg shadow-sm border border-gray-100';
+        answerEl.innerHTML = `
+          <div class="font-bold mb-3">
+            第${i}题（${randomSubject} - ${randomType}）
+          </div>
+          <div class="mb-2">
+            <span class="font-medium">题目：</span>${randomQuestion.question}
+          </div>
+          <div class="mb-2">
+            <span class="font-medium">答案：</span>${randomQuestion.answer}
+          </div>
+          <div>
+            <span class="font-medium">解析：</span>${randomQuestion.explanation}
+          </div>
+        `;
+        answersPreview.appendChild(answerEl);
+      }
+    }
+    
+    // 显示/隐藏答案
+    const showAnswersBtn = document.getElementById('show-answers');
+    const answersSection = document.getElementById('answers-section');
+    
+    showAnswersBtn.addEventListener('click', () => {
+      answersSection.classList.toggle('hidden');
+      if (answersSection.classList.contains('hidden')) {
+        showAnswersBtn.innerHTML = '查看答案和解析 <i class="fa fa-eye ml-2"></i>';
+      } else {
+        showAnswersBtn.innerHTML = '隐藏答案和解析 <i class="fa fa-eye-slash ml-2"></i>';
+      }
+    });
+    
+    // 下载和打印功能
+    document.getElementById('download-pdf').addEventListener('click', () => {
+      alert('PDF 下载功能已触发，实际项目中会生成并下载 PDF 文件。');
+    });
+    
+    document.getElementById('download-word').addEventListener('click', () => {
+      alert('Word 下载功能已触发，实际项目中会生成并下载 Word 文件。');
+    });
+    
+    document.getElementById('print-questions').addEventListener('click', () => {
+      window.print();
+    });
+    
+    // 常见问题折叠
+    const questionToggles = document.querySelectorAll('.question-toggle');
+    questionToggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const answer = toggle.closest('h4').nextElementSibling;
+        answer.classList.toggle('hidden');
+        toggle.classList.toggle('fa-chevron-down');
+        toggle.classList.toggle('fa-chevron-up');
+      });
+    });
+  </script>
+</body>
+</html>
+    
